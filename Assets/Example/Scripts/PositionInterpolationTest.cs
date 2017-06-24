@@ -8,6 +8,7 @@ public class PositionInterpolationTest : MonoBehaviour
 	private Vec3Interpolator positionInterpolation;
 	private float randomTimer;
 	[SerializeField] bool randomlyInterruptInterpolation;
+	[SerializeField] bool interpolation;
 
 	void Start ()
 	{
@@ -16,10 +17,14 @@ public class PositionInterpolationTest : MonoBehaviour
 		randomTimer = .5f;
 		positionInterpolation.InterpolationDoneEvent += PositionInterpolation_interpolationDone;
 		positionInterpolation.InterpolationInterruptedEvent+= PositionInterpolation_interpolationInterrupted;
+
+		positionInterpolation.Interpolation = false;
 	}
 
 	void Update ()
 	{
+		positionInterpolation.Interpolation = interpolation;
+
 		transform.position = positionInterpolation.CurrentValue;
 
 		if (!randomlyInterruptInterpolation) return;

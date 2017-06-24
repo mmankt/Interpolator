@@ -7,13 +7,12 @@ namespace TheTideGames.utils.Interpolator
 		protected float extrapolationLimit;
 		private bool m_interpolation = true;
 		private T m_target;
-		private float m_time;
 		protected float passedTime;
 
 		public delegate void InterpolationDone();
 		public delegate void InterpolationInterrupted();
 
-		public T CurrentValue { get; protected set; }
+		public T CurrentValue { get; private set; }
 
 		public T Target
 		{
@@ -41,15 +40,7 @@ namespace TheTideGames.utils.Interpolator
 			}
 		}
 
-		public float Time
-		{
-			get { return m_time; }
-			set
-			{
-				m_time = value;
-				passedTime = 0;
-			}
-		}
+		public float Time { get; set; }
 
 		public bool Done { get; private set; }
 
@@ -93,21 +84,28 @@ namespace TheTideGames.utils.Interpolator
 			this.extrapolationLimit = extrapolationLimit;
 		}
 
-		protected virtual void Update()
+		void Update()
 		{
 			if (!m_interpolation || Done) return;
 
 			passedTime += UnityEngine.Time.deltaTime;
 
-			if (!(passedTime >= Time + extrapolationLimit)) return;
-
-			Done = true;
-			CurrentValue = Target;
-
-			if (InterpolationDoneEvent != null)
+			if (passedTime >= Time + extrapolationLimit)
 			{
-				InterpolationDoneEvent();
+				Done = true;
+				CurrentValue = Target;
+
+				if (InterpolationDoneEvent != null)
+				{
+					InterpolationDoneEvent();
+				}
+
+				return;
 			}
+
+			CurrentValue = InterpolationStep();
 		}
+
+		protected abstract T InterpolationStep();
 	}
 }

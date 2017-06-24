@@ -8,6 +8,7 @@ public class EulerInterpolationTest2 : MonoBehaviour
 	private EulerInterpolator rotationInterpolation;
 	private float randomTimer;
 	[SerializeField] bool randomlyInterruptInterpolation;
+	[SerializeField] bool interpolation;
 
 	void Start()
 	{
@@ -19,6 +20,8 @@ public class EulerInterpolationTest2 : MonoBehaviour
 
 	void Update()
 	{
+		rotationInterpolation.Interpolation = interpolation;
+
 		transform.eulerAngles = new Vector3(0,0, rotationInterpolation.CurrentValue);
 
 		if (!randomlyInterruptInterpolation) return;
